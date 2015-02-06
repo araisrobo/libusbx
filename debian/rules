@@ -78,10 +78,7 @@ configure-deb-stamp: configure-common-stamp
 	cd $(objdir) && \
 		CPPFLAGS="$(CPPFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" ../configure $(CROSS) \
 			--prefix=/usr \
-			--libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
-			--mandir=/usr/share/man \
-			--infodir=/usr/share/info \
-			--enable-examples-build
+			--libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH)
 
 	touch $@
 
@@ -95,9 +92,7 @@ configure-udeb-stamp: configure-common-stamp
 	# run configure with build tree $(objdir_udeb)
 	cd $(objdir_udeb) && \
 		CPPFLAGS="$(CPPFLAGS_UDEB)" CFLAGS="$(CFLAGS_UDEB)" LDFLAGS="$(LDFLAGS_UDEB)" ../configure $(CROSS) \
-			--prefix=/usr \
-			--mandir=/usr/share/man \
-			--infodir=/usr/share/info
+			--prefix=/usr
 
 	touch $@
 
@@ -126,8 +121,7 @@ build-indep: build-indep-stamp
 build-indep-stamp: configure-deb-stamp
 	dh_testdir
 
-	cd $(objdir) && \
-		$(MAKE) -C doc docs
+	cd $(objdir) 
 
 	touch $@
 
@@ -174,9 +168,7 @@ install: build-arch
 binary-indep: build-indep
 	dh_testroot
 	dh_installchangelogs -i
-	dh_installdocs -i
 	dh_installexamples -i
-	dh_installman -i
 	dh_link -i
 	dh_compress -i
 	dh_fixperms -i
@@ -190,8 +182,6 @@ binary-arch: build-arch install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs -a NEWS
-	dh_installdocs -a
-	dh_installman -a
 	dh_link -a
 	dh_strip -plibusb-1.0-0 --dbg-package=libusb-1.0-0-dbg
 	dh_strip -a --remaining-packages
